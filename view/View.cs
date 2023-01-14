@@ -52,9 +52,11 @@ namespace sudoku.view
                         break;
                     case "c": // in case the user chose to insert from the console
                         getFromConsole();
+                        tryToSolve();
                         break;
                     case "f": // in case the user chose to insert from the file
                         getFromFile();
+                        tryToSolve();
                         break;
                     default: // any other option not acceptable, error will print and the user will get another option
                         Console.WriteLine(error.NOT_VALID_OPTION);
@@ -71,21 +73,31 @@ namespace sudoku.view
         }
 
         // in case the user chose to insert from the console
+        // insert board string to this.text
         public void getFromConsole()
         {
             Console.WriteLine(constants.GET_FROM_CONSOLE_TEXT);
             text = Console.ReadLine();
-            if (Validation.check_correct_chars(text) && Validation.check_size(text))
-            {
-                Console.WriteLine("ok");
-            }
-
         }
 
         // in case the user chose to insert from the file
+        // insert board string to this.text
         public void getFromFile()
         {
 
+        }
+
+        // if the string in valid, try to solve the board
+        // uses checkValidation to check if the string is valid
+        public void tryToSolve()
+        {
+            if (checkValidation())
+                turn.tryToSolve();
+        }
+       
+        public bool checkValidation()
+        {
+            return text != null && Validation.check_correct_chars(text) && Validation.check_size(text);
         }
 
     }
