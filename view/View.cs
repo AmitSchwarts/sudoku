@@ -3,6 +3,7 @@ using sudoku.error;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,12 +16,14 @@ namespace sudoku.view
     {
         // Holds the start sudoko string 
         private string text;
-        // Holds the resulting sudoku string (or the error)
-        private string solution;
+        // Holds the resulting sudoku strings (or the error)
+        private string[] solution;
         // Holds a string that represents the user's selection from the menu
         private string userSelect;
         // Holds a string that represents the user's selection for the file path
         private string pathFile;
+        // Holds if error happend
+        private bool errorHappend;
         // Holds all constant variables
         private ViewConstants constants;
         // Holds all error massage
@@ -32,9 +35,10 @@ namespace sudoku.view
         public View()
         {
             text = string.Empty;
-            solution = string.Empty;
+            solution = new string[2];
             userSelect = string.Empty;
             pathFile = string.Empty;
+            errorHappend = false;
             constants = new ViewConstants();
             error = new ErrorMessages();
             solveSudoku = new Controller(error);
@@ -79,7 +83,16 @@ namespace sudoku.view
         {
             text = getFromConsole(constants.GET_FROM_CONSOLE_TEXT); // get text from console
             tryToSolve(); // try to solve the text
-            printToConsole(solution); // print solution or error to console
+            if(errorHappend)
+            {
+                printToConsole(solution[0]); // print error to console
+            }
+            else
+            {
+                printToConsole(solution[0]); // print solution to console
+                printToConsole(constants.BREAK); // add break 
+                printToConsole(solution[1]); // print another form of solution to console
+            }
         }
 
         // in case the user chose to insert from the file
@@ -93,8 +106,18 @@ namespace sudoku.view
             }
             text = getFromFile(); // get text from file
             tryToSolve(); // try to solve the text
-            printToFile(solution); // insert the solution or the error back to the file
-            printToConsole(solution); // print solution or error to console
+            if (errorHappend)
+            {
+                printToFile(solution[0]); // print error to file
+            }
+            else
+            {
+                printToFile(solution[1]); // insert the solution or the error back to the file
+                printToConsole(solution[0]); // print solution to console
+                printToConsole(constants.BREAK); // add break 
+                printToConsole(solution[1]); // print another form of solution to console
+            }
+
         }
 
         // get string from console
@@ -130,7 +153,7 @@ namespace sudoku.view
             catch
             {
                 // catch exception during the opening or writing to the file
-                Console.WriteLine("I dont succsess to write to your file.");
+                printToConsole(error.FAIL_ACSSES_TO_FILE);
             } 
         }
 
@@ -147,7 +170,14 @@ namespace sudoku.view
                 // in case of failer, solution will containe string of the error message
                 solution = solveSudoku.tryToSolve(text); 
                 stopwatch.Stop(); // stop the timer
-                Console.WriteLine("Time: " + stopwatch.ElapsedMilliseconds + " ms\n"); // print the time it took solve the board
+                if(solveSudoku.errorHappend) // in case error happend
+                {
+                    errorHappend = true; // update that this situation happened to the data
+                }
+                else // if there is a result
+                {
+                    Console.WriteLine("Time: " + stopwatch.ElapsedMilliseconds + " ms\n"); // print the time it took solve the board
+                }
                 return;
             }
         }
@@ -159,22 +189,26 @@ namespace sudoku.view
         {
             if (text == null) // text cannot be null
             {
-                solution = error.STRING_EMPTY;
+                errorHappend = true;
+                solution[0] = error.STRING_EMPTY;
                 return false;
             }
             else if (text == "") // text cannot be empty
             {
-                solution = error.STRING_EMPTY;
+                errorHappend = true;
+                solution[0] = error.STRING_EMPTY;
                 return false;
             }
             else if (!PreValidation.check_size(text)) // text is not in the correct size
             {
-                solution = error.INCORRECT_SIZE;
+                errorHappend = true;
+                solution[0] = error.INCORRECT_SIZE;
                 return false;
             }
             else if(!PreValidation.check_correct_chars(text)) // text containe incorrect char
             {
-                solution = error.INCORRECT_CHAR;
+                errorHappend = true;
+                solution[0] = error.INCORRECT_CHAR;
                 return false;
             }
             return true;
