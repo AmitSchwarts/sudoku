@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace sudoku.view
 {
-    // class View: contains ...
     public class View : ViewInterface
     {
         // Holds the start sudoko string 
@@ -38,7 +37,7 @@ namespace sudoku.view
             pathFile = string.Empty;
             constants = new ViewConstants();
             error = new ErrorMessages();
-            solveSudoku = new Controller();
+            solveSudoku = new Controller(error);
         }
 
         // prints a message to open the program,
