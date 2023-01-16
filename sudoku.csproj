@@ -7,10 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="controller\" />
-    <Folder Include="model\" />
-    <Folder Include="view\" />
-  </ItemGroup>
-
 </Project>
