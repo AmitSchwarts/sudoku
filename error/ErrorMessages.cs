@@ -14,7 +14,7 @@ namespace sudoku.error
         public string INCORRECT_SIZE = "\nthis sudoku board is not in the correct size";
         public string INCORRECT_CHAR = "\nthis sudoku board containe incorrect char";
         public string NOT_VALID_OPTION = "\nthis choice is not a valid option";
-        public string UNSOLVE_MAT = "\nthis mat cannot be solved";
+        public string UNSOLVE_MAT = "\nthis sudoku board cannot be solved";
         public string FAIL_ACSSES_TO_FILE = "\ni dont succsess to write to your file.";
     }
 }

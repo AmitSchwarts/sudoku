@@ -1,14 +1,6 @@
 ﻿using sudoku.controller;
 using sudoku.error;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sudoku.view
 {
@@ -83,7 +75,7 @@ namespace sudoku.view
         {
             text = getFromConsole(constants.GET_FROM_CONSOLE_TEXT); // get text from console
             tryToSolve(); // try to solve the text
-            if(errorHappend)
+            if (errorHappend)
             {
                 printToConsole(solution[0]); // print error to console
             }
@@ -154,7 +146,7 @@ namespace sudoku.view
             {
                 // catch exception during the opening or writing to the file
                 printToConsole(error.FAIL_ACSSES_TO_FILE);
-            } 
+            }
         }
 
         // if the string in valid, try to solve the board
@@ -168,9 +160,9 @@ namespace sudoku.view
                 // try to solve the sudoku:
                 // in case of success, solution will containe string of board
                 // in case of failer, solution will containe string of the error message
-                solution = solveSudoku.tryToSolve(text); 
+                solution = solveSudoku.tryToSolve(text);
                 stopwatch.Stop(); // stop the timer
-                if(solveSudoku.errorHappend) // in case error happend
+                if (solveSudoku.errorHappend) // in case error happend
                 {
                     errorHappend = true; // update that this situation happened to the data
                 }
@@ -205,7 +197,7 @@ namespace sudoku.view
                 solution[0] = error.INCORRECT_SIZE;
                 return false;
             }
-            else if(!PreValidation.check_correct_chars(text)) // text containe incorrect char
+            else if (!PreValidation.check_correct_chars(text)) // text containe incorrect char
             {
                 errorHappend = true;
                 solution[0] = error.INCORRECT_CHAR;
